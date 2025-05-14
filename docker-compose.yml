@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongodb_qr
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - "27017:27017"
+    networks:
+      - qr-net
+
+  backend:
+    build: .
+    container_name: qr-backend
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mongo
+    networks:
+      - qr-net
+
+networks:
+  qr-net:
+    driver: bridge

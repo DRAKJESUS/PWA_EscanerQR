@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Escáner QR</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    
+    <!-- Usar versión local del escáner QR -->
+    <script src="{{ url_for('static', filename='js/html5-qrcode.min.js') }}"></script>
+</head>
+<body>
+    <div class="contenedor">
+        <h1 style="text-align: center;">Escáner QR</h1>
+
+        <p id="estadoConexion" style="text-align: center; font-weight: bold;">🟡 Verificando conexión...</p>
+
+        <div id="reader" style="width: 400px; margin: auto;"></div>
+        <p style="text-align: center;">Esperando escaneo...</p>
+
+        <hr>
+        <h2 style="text-align: center;">Productos registrados</h2>
+        <table border="1" style="margin: auto; border-collapse: collapse; width: 80%;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-productos">
+                {% for p in productos %}
+                <tr>
+                    <td>{{ p.ID }}</td>
+                    <td>{{ p.Nombre }}</td>
+                    <td>{{ p.Fecha }}</td>
+                    <td>{{ p.Hora }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/static/sw.js')
+              .then(reg => console.log("✅ SW registrado", reg))
+              .catch(err => console.error("❌ Error al registrar SW", err));
+          });
+        }
+    </script>
+
+    <!-- Tu lógica del escáner -->
+    <script src="{{ url_for('static', filename='js/scanner.js') }}"></script>
+</body>
+</html>
